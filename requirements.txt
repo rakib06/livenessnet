@@ -1,3 +1,6 @@
 tensorflow
 matplotlib
 scikit-learn
+>pip install -U opencv-python==4.5.5.62
+pip install --upgrade pip setuptools wheel
+dlib
