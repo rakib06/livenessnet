@@ -96,7 +96,7 @@ opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
 #                          classes=len(le.classes_))
 # mobilenetv2
 model = AudioAppraiseNet.build(width=128, height=128, depth=3,
-                           classes=len(le.classes_), reg=l2(0.0004))
+                           classes=len(le.classes_))
 # model = multi_gpu_model(model, gpus=4)
 model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
