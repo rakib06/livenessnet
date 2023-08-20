@@ -108,8 +108,9 @@ model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
 
 callbacks = [keras.callbacks.TensorBoard(log_dir='./logs', update_freq='epoch'),
-             keras.callbacks.ModelCheckpoint(filepath='./checkpoints/livenessnet.{epoch:02d}.hdf5',
+             tf.keras.callbacks.ModelCheckpoint(filepath='./checkpoints/livenessnet.{epoch:02d}.hdf5',
                                              verbose=0, save_best_only=False, save_weights_only=False, mode='auto',
+                                            save_freq='epoch',
                                              period=1)
              ]
 # train the network
