@@ -91,7 +91,7 @@ aug = ImageDataGenerator(rotation_range=20, zoom_range=0.15,
 
 # initialize the optimizer and model
 print("[INFO] compiling model...")
-opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+opt = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
 # model = LivenessNet.build(width=32, height=32, depth=3,
 #                          classes=len(le.classes_))
 # mobilenetv2
