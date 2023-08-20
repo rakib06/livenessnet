@@ -91,7 +91,13 @@ aug = ImageDataGenerator(rotation_range=20, zoom_range=0.15,
 
 # initialize the optimizer and model
 print("[INFO] compiling model...")
-opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.01,
+    decay_steps=10000,
+    decay_rate=0.9)
+opt = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+
+#opt = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
 # model = LivenessNet.build(width=32, height=32, depth=3,
 #                          classes=len(le.classes_))
 # mobilenetv2
@@ -102,8 +108,9 @@ model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
 
 callbacks = [keras.callbacks.TensorBoard(log_dir='./logs', update_freq='epoch'),
-             keras.callbacks.ModelCheckpoint(filepath='./checkpoints/livenessnet.{epoch:02d}.hdf5',
+             tf.keras.callbacks.ModelCheckpoint(filepath='./checkpoints/livenessnet.{epoch:02d}.hdf5',
                                              verbose=0, save_best_only=False, save_weights_only=False, mode='auto',
+                                            save_freq='epoch',
                                              period=1)
              ]
 # train the network
