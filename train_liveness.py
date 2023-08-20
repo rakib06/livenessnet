@@ -91,7 +91,13 @@ aug = ImageDataGenerator(rotation_range=20, zoom_range=0.15,
 
 # initialize the optimizer and model
 print("[INFO] compiling model...")
-opt = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
+lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.01,
+    decay_steps=10000,
+    decay_rate=0.9)
+opt = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+
+#opt = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
 # model = LivenessNet.build(width=32, height=32, depth=3,
 #                          classes=len(le.classes_))
 # mobilenetv2
