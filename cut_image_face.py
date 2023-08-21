@@ -24,11 +24,15 @@ net = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 
 
 imagePaths =  list(paths.list_images(args["dataset"]))
-
-for imagePath in imagePaths[:1]:
+print(len(imagePaths))
+count = 0
+for imagePath in imagePaths:
     # extract the class label from the filename, load the image and
     # resize it to be a fixed 32x32 pixels, ignoring aspect ratio
     label = imagePath.split(os.path.sep)[-2]
+    name= imagePath.split(os.path.sep)[-1].split('.')[0]
+    # print(name)
+    # exit()
     # print(": ", imagePath.split(os.path.sep)[1])
     # print("os.path.sep: ", os.path.sep)
     # print("label: ", label)
@@ -67,12 +71,14 @@ for imagePath in imagePaths[:1]:
             FACE_IMAGE_PART = cv2.resize(face, (256, 256))
             os.makedirs('face') if not os.path.exists('face') else ''
             timestamp = int(time.time())  # Generate a unique timestamp
-            image_filename = f"face/face_{timestamp}.jpg"  # Create a filename with timestamp
+            image_filename = f"face/{name}.jpg"  # Create a filename with timestamp
             cv2.imwrite(image_filename, FACE_IMAGE_PART)
         except:
-            pass
+            print('Exception Found!!', count)
     else:
         print('ERROR... ', imagePath, ' NO FACE FOUND')
+    time.sleep(.1)
+    count+=1
 
     # update the data and labels lists, respectively
     # data.append(image)
