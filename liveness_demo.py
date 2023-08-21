@@ -48,7 +48,7 @@ while True:
     # to have a maximum width of 600 pixels
     frame = vs.read()
     frame = imutils.resize(frame, width=600)
-    FACE_IMAGE_PART = ''
+    FACE_IMAGE_PART = None
     # grab the frame dimensions and convert it to a blob
     (h, w) = frame.shape[:2]
     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0,
@@ -82,7 +82,11 @@ while True:
             # extract the face ROI and then preproces it in the exact
             # same manner as our training data
             face = frame[startY:endY, startX:endX]
-            face = cv2.resize(face, (32, 32))
+            try:
+                FACE_IMAGE_PART = cv2.resize(face, (256, 256))
+                face = cv2.resize(face, (32, 32))
+            except:
+                break
             face = face.astype("float") / 255.0
             face = img_to_array(face)
             face = np.expand_dims(face, axis=0)
@@ -107,6 +111,25 @@ while True:
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
         break
+    
+    
+    # if the `q` key was pressed, break from the loop
+    if key == ord("f") :
+        if FACE_IMAGE_PART is not None:
+            os.makedirs('fake') if not os.path.exists('fake') else ''
+            timestamp = int(time.time())  # Generate a unique timestamp
+            image_filename = f"fake/frame_{timestamp}.jpg"  # Create a filename with timestamp
+            cv2.imwrite(image_filename, FACE_IMAGE_PART)  # Save the frame as an image
+
+    # if the `q` key was pressed, break from the loop
+    if key == ord("r"):
+        if FACE_IMAGE_PART is not None:
+            os.makedirs('real') if not os.path.exists('real') else ''
+            timestamp = int(time.time())  # Generate a unique timestamp
+            image_filename = f"real/frame_{timestamp}.jpg"  # Create a filename with timestamp
+            cv2.imwrite(image_filename, FACE_IMAGE_PART)  # Save the frame as an image
+
+    
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
