@@ -11,8 +11,9 @@ import os
 from imutils import paths
 
 args ={
-    "dataset": "",
+    "dataset": r"C:\Users\rakibul.hasan\Downloads\eKYC Uploaded Images",
     "detector": "face_detector",
+    "confidence": .8
     }
 
 protoPath = os.path.sep.join([args["detector"], "deploy.prototxt"])
@@ -24,7 +25,7 @@ net = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 
 imagePaths =  list(paths.list_images(args["dataset"]))
 
-for imagePath in imagePaths:
+for imagePath in imagePaths[:1]:
     # extract the class label from the filename, load the image and
     # resize it to be a fixed 32x32 pixels, ignoring aspect ratio
     label = imagePath.split(os.path.sep)[-2]
@@ -32,7 +33,7 @@ for imagePath in imagePaths:
     # print("os.path.sep: ", os.path.sep)
     # print("label: ", label)
     image = cv2.imread(imagePath)
-    image = cv2.resize(image, (256, 256))
+    # image = cv2.resize(image, (256, 256))
     
     
     frame = imutils.resize(image, width=600)
@@ -50,7 +51,7 @@ for imagePath in imagePaths:
     if confidence > args["confidence"]:
         # compute the (x, y)-coordinates of the bounding box for
         # the face and extract the face ROI
-        box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+        box = detections[0, 0, 0, 3:7] * np.array([w, h, w, h])
         (startX, startY, endX, endY) = box.astype("int")
         # ensure the detected bounding box does fall outside the
         # dimensions of the frame
@@ -66,10 +67,12 @@ for imagePath in imagePaths:
             FACE_IMAGE_PART = cv2.resize(face, (256, 256))
             os.makedirs('face') if not os.path.exists('face') else ''
             timestamp = int(time.time())  # Generate a unique timestamp
-            image_filename = f"fake/face_{timestamp}.jpg"  # Create a filename with timestamp
+            image_filename = f"face/face_{timestamp}.jpg"  # Create a filename with timestamp
             cv2.imwrite(image_filename, FACE_IMAGE_PART)
         except:
             pass
+    else:
+        print('ERROR... ', imagePath, ' NO FACE FOUND')
 
     # update the data and labels lists, respectively
     # data.append(image)
