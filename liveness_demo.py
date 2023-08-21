@@ -84,7 +84,7 @@ while True:
             face = frame[startY:endY, startX:endX]
             try:
                 FACE_IMAGE_PART = cv2.resize(face, (256, 256))
-                face = cv2.resize(face, (32, 32))
+                face = cv2.resize(face, (256, 256))
             except:
                 break
             face = face.astype("float") / 255.0
@@ -95,14 +95,26 @@ while True:
             # model to determine if the face is "real" or "fake"
             preds = model.predict(face)[0]
             j = np.argmax(preds)
+            
             label = le.classes_[j]
-
+            label_mask = {
+                "real": "Live",
+                "fake": "Not live"
+            }
             # draw the label and bounding box on the frame
             label = "{}: {:.4f}".format(label, preds[j])
-            cv2.putText(frame, label, (startX, startY - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            cv2.rectangle(frame, (startX, startY), (endX, endY),
-                (0, 0, 255), 2)
+            #print("lebel")
+            if label.split(':')[0] == 'fake':
+                cv2.putText(frame, label_mask[ label.split(':')[0]], (startX, startY - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.rectangle(frame, (startX, startY), (endX, endY),
+                    (0, 0, 255), 2)
+                print(j)
+            if  label.split(':')[0] == 'real':
+                cv2.putText(frame, label_mask[ label.split(':')[0]], (startX, startY - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.rectangle(frame, (startX, startY), (endX, endY),
+                    (0, 255, 0), 2)
 
     # show the output frame and wait for a key press
     cv2.imshow("Frame", frame)
