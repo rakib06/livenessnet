@@ -11,7 +11,7 @@ import os
 from imutils import paths
 
 args ={
-    "dataset": r"C:\Users\rakibul.hasan\Downloads\eKYC Uploaded Images",
+    "dataset": r"C:\Users\rakibul.hasan\Downloads\2023-8-20\2023-8-20\real\1\real_000",
     "detector": "face_detector",
     "confidence": .8
     }
@@ -69,9 +69,10 @@ for imagePath in imagePaths:
         face = frame[startY:endY, startX:endX]
         try:
             FACE_IMAGE_PART = cv2.resize(face, (256, 256))
-            os.makedirs('face') if not os.path.exists('face') else ''
+            folderpath = args["dataset"] + "/face"
+            os.makedirs(folderpath) if not os.path.exists(folderpath) else ''
             timestamp = int(time.time())  # Generate a unique timestamp
-            image_filename = f"face/{name}.jpg"  # Create a filename with timestamp
+            image_filename = f"{folderpath}/{name}.jpg"  # Create a filename with timestamp
             cv2.imwrite(image_filename, FACE_IMAGE_PART)
         except:
             print('Exception Found!!', count)
